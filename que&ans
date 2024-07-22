@@ -100,3 +100,15 @@ ON order_details.Pizza_id = pizzas.pizza_id
 GROUP BY pizza_types.name
 ORDER BY revenue DESC LIMIT 3;
 
+-- Analyze the cumulative revenue generated over time.
+
+SELECT order_date,
+SUM(revenue) OVER (OrDER BY order_date) AS cum_revenue
+FROM
+(SELECT orders.Order_date,
+SUM(order_details.quantity * pizzas.price) AS revenue
+FROM order_details JOIN pizzas
+ON order_details.Pizza_id = pizzas.pizza_id
+JOIN orders ON 
+Orders.order_id = order_details.Order_id
+Group BY orders.Order_date) AS sales;
